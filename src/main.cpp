@@ -10,6 +10,8 @@
 #include <string>
 #include <cstdint>
 #include <memory>
+#include <utility>
+
 using std::cout;
 using std::endl;
 
@@ -17,6 +19,7 @@ using std::endl;
 #include "vector.h"
 #include "utils.h"
 #include "framebuffer.h"
+#include "skydome.h"
 #include "light.h"
 #include "ray.h"
 #include "texture3d.h"
@@ -49,13 +52,14 @@ void P::param()
     show_bg = true;
 
     float rotate = 0.5f;
-    camera_origin = vec3(dist*sinf(rotate), 1.2f, dist*cosf(rotate));
+//     camera_origin = vec3(dist*sinf(rotate), 1.2f, dist*cosf(rotate));
+    camera_origin = vec3(dist*sinf(rotate), 0.2f, dist*cosf(rotate));
     camera_lookat = vec3(0.0f);
     fov = 30.0f;
 
     width = 600;
     height = 600;
-    spp = 10;
+    spp = 1;
     trace_depth = 200;
 
     // sigma_t_prime = sigma_a + sigma_s * (1 - g)
@@ -120,6 +124,12 @@ float volumetricPathTacing(
     Ray cr(ray);
     float radiance = (0.0f);
     float throughput = (1.0f);
+
+    if (0)
+    {
+        vec3 p;
+        return light.Li(cr.o, cr.d, p)[channel];
+    }
 
     for (int depth = 0; depth < max_depth; depth++)
     {
@@ -193,7 +203,7 @@ float volumetricPathTacing(
             radiance += (attenuated_radiance * throughput) *
                 (phase->evaluate(frame, ldir) / pdfW) * mis_weight;
         }
-        if (0)
+        if (1)
         {
             vec3 lpos;
             vec3 ldir = phase->sample(frame, rand01(), rand01());

@@ -24,8 +24,8 @@ bool intersect_vol(const Ray& r, const vec3& aabb_min, const vec3& aabb_max, flo
     if (tzmax < tmax)
         tmax = tzmax;
     if (tmin > 0) t_near = tmin; else t_near = 0;
-    if (tmax < inf) t_far = tmax;
-    if (tmax >= inf){
+    if (tmax < M_INFINITY) t_far = tmax;
+    if (tmax >= M_INFINITY){
         return false;
     }
     return true;

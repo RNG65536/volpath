@@ -33,6 +33,9 @@
     <ClCompile Include="texture3d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="hosek\ArHosekSkyModel.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="volume.h">
@@ -43,9 +46,6 @@
     </ClInclude>
     <ClInclude Include="constants.h">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="fractal.h">
-      <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="utils.h">
       <Filter>Source Files</Filter>
@@ -65,11 +65,29 @@
     <ClInclude Include="scene.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="ppmloader.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fractal.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="medium.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="skydome.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hosek\ArHosekSkyModelData_RGB.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hosek\ArHosekSkyModelData_Spectral.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hosek\ArHosekSkyModel.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hosek\ArHosekSkyModelData_CIEXYZ.h">
+      <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

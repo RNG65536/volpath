@@ -8,8 +8,17 @@ class Light
 //     vec3 center = vec3(-2, -2, -4);
     float radius = 0.5f;
     float emission = 10.0f / (radius * radius);
+    Skydome sky;
 
 public:
+    Light() : sky(
+        5.0f,
+        vec3(0.4f),
+        M_PI * 0.1f,
+        M_PI * -0.2f,
+        0.02f)
+    {
+    }
     void sample(vec3 position, float& pdfW, vec3& light_pos, vec3& light_dir, vec3& Li) const
     {
         Frame frame(center - position);
@@ -31,6 +40,7 @@ public:
     }
     vec3 Li(const vec3& position, const vec3& direction, vec3& light_pos) const
     {
+        light_pos = position + direction * M_INFINITY;
         float d2 = dot(position - center, position - center);
         float l2 = d2 - radius * radius;
         if (l2 < 0) // inside sphere
@@ -41,7 +51,7 @@ public:
         float cos_a = dot(direction, normalize(center - position));
         if (cos_a < cos_a_max)
         {
-            return vec3(0.0f);
+            return sky.radiance(direction);
         }
         light_pos = position + direction * std::sqrt(l2);
         return vec3(emission); // todo : add intersection
