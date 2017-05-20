@@ -43,6 +43,17 @@ int clampi(int x, int a, int b)
     return x < a ? a : x > b ? b : x;
 }
 
+float misWeightPowerHeuristic(float pdf0, float pdf1)
+{
+    float a = pdf0 * pdf0;
+    return a / (a + pdf1 * pdf1);
+}
+
+float misWeightBalanceHeuristic(float pdf0, float pdf1)
+{
+    return pdf0 / (pdf0 + pdf1);
+}
+
 vec3 Frame::toWorld(const vec3& c) const
 {
     return t * c.x + b * c.y + n * c.z;
@@ -54,4 +65,19 @@ Frame::Frame(const vec3& normal)
     vec3 a = fabs(n.x) > 0.1 ? vec3(0, 1, 0) : vec3(1, 0, 0);
     t = normalize(cross(a, n));
     b = cross(n, t);
+}
+
+const vec3& Frame::bitangent() const
+{
+    return b;
+}
+
+const vec3& Frame::tangent() const
+{
+    return t;
+}
+
+const vec3& Frame::normal() const
+{
+    return n;
 }

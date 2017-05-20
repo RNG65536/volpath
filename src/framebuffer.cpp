@@ -23,18 +23,18 @@ static void dumpHDR(const char *filename, const float *m_buffer, int m_width, in
         HDRPixel(const vec3& c)
         {
             float d = f_max(f_max(c.x, c.y), c.z);
-            if (d <= 1e-32)
+            if (d <= 1e-32f)
             {
                 r = g = b = e = 0;
                 return;
             }
             int _e;
             float m = frexp(d, &_e); // d = m * 2^e
-            d = m * 256.0 / d;
-            r = c.x * d;
-            g = c.y * d;
-            b = c.z * d;
-            e = _e + 128;
+            d = m * 256.0f / d;
+            r = uint8_t(c.x * d);
+            g = uint8_t(c.y * d);
+            b = uint8_t(c.z * d);
+            e = uint8_t(_e + 128);
         }
 
         uint8_t operator[](int i) const
@@ -87,7 +87,7 @@ static void dumpHDR(const char *filename, const float *m_buffer, int m_width, in
 }
 
 
-static void save_hdr_image(const float *fb, int width, int height, const char *filename)
+static void save_hdr_image(const float *fb, int width, int height)
 {
     dumpHDR("_additional.hdr", fb, width, height);
 
@@ -129,7 +129,7 @@ void FrameBuffer::dump() const
         *std::max_element(fb1, fb1 + m_buffer.size() * 3));
 
     //not tonemapped
-    save_hdr_image(fb1, m_width, m_height, "_additional.bin");
+    save_hdr_image(fb1, m_width, m_height);
 }
 
 std::vector<vec3>& FrameBuffer::buffer()

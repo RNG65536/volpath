@@ -78,6 +78,19 @@ public:
             }
         }
     }
+    void initConstant(float f)
+    {
+        for (int i = 0; i < N; i++)
+        {
+            for (int j = 0; j < N; j++)
+            {
+                for (int k = 0; k < N; k++)
+                {
+                    data[index(i, j, k)] = f;
+                }
+            }
+        }
+    }
 
     float& operator[] (int n) { return data[n]; }
     const float& operator[] (int n) const { return data[n]; }

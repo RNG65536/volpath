@@ -35,7 +35,12 @@ class Frame
 public:
     Frame(const vec3& normal);
     vec3 toWorld(const vec3& c) const;
+    const vec3& normal() const;
+    const vec3& tangent() const;
+    const vec3& bitangent() const;
 };
 
+float misWeightPowerHeuristic(float pdf0, float pdf1);
+float misWeightBalanceHeuristic(float pdf0, float pdf1);
 
 #endif // util_h__
