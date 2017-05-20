@@ -52,6 +52,11 @@ public:
         }
     }
 
+    vec3 sunDirection() const
+    {
+        return toDirection(m_solarAzimuth, M_PI_2 - m_solarElevation);
+    }
+
     vec3 radiance(const vec3& dir) const
     {
         auto angles = toAngle(dir);
@@ -66,21 +71,26 @@ public:
         {
             for (int i = 0; i < 3; i++)
             {
-                rad[i] = arhosek_tristim_skymodel_radiance(skymodel_state[i], theta, gamma, i);
+                rad[i] = (float)arhosek_tristim_skymodel_radiance(skymodel_state[i], theta, gamma, i) * m_brightness;
             }
         }
         else
         {
-            vec3 viewdir = toDirection(phi, M_PI - theta);
-            float gamma = acos(dot(viewdir, sundir));
             for (int i = 0; i < 3; i++)
             {
-                rad[i] = arhosek_tristim_skymodel_radiance(skymodel_state[i], M_PI - theta, gamma, i);
+                rad[i] = m_ground_albedo[i];
             }
-            rad *= m_ground_albedo;
+
+//             vec3 viewdir = toDirection(phi, M_PI - theta);
+//             float gamma = acos(dot(viewdir, sundir));
+//             for (int i = 0; i < 3; i++)
+//             {
+//                 rad[i] = (float)arhosek_tristim_skymodel_radiance(skymodel_state[i], M_PI - theta, gamma, i);
+//             }
+//             rad *= m_ground_albedo;
         }
 
-        return rad * m_brightness;
+        return rad;
     }
 };
 

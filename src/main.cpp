@@ -40,6 +40,7 @@ namespace P
 
     float density_scale;
     float HG_mean_cosine;
+    vec3 sigma_s, sigma_a;
 
     bool show_bg;
 
@@ -53,19 +54,24 @@ void P::param()
 
     float rotate = 0.5f;
 //     camera_origin = vec3(dist*sinf(rotate), 1.2f, dist*cosf(rotate));
-    camera_origin = vec3(dist*sinf(rotate), 0.2f, dist*cosf(rotate));
-    camera_lookat = vec3(0.0f);
+    camera_origin = vec3(dist*sinf(rotate), -0.55f, dist*cosf(rotate));
+    camera_lookat = vec3(0.0f, 0.2f, 0.0f);
     fov = 30.0f;
 
     width = 600;
     height = 600;
-    spp = 1;
-    trace_depth = 200;
+    spp = 100;
+    trace_depth = 500;
 
     // sigma_t_prime = sigma_a + sigma_s * (1 - g)
     // for scattering dominated media, should scale with 1 / (1 - g) to approximate appearance
-    density_scale = 20.0f;
-    HG_mean_cosine = 0.0f;// 0.7f;// 
+    density_scale = 1000.0f; //  20.0f;
+    HG_mean_cosine = 0.877f;// 0.7f;// 
+
+//     sigma_s = vec3(0.70f, 1.22f, 1.90f) * density_scale;
+//     sigma_a = vec3(0.0014f, 0.0025f, 0.0142f) * density_scale;
+    sigma_s = vec3(1.0f, 1.0f, 1.0f) * density_scale;
+    sigma_a = vec3(0.0001f, 0.0001f, 0.0001f) * density_scale;
 }
 
 Light light;
@@ -121,15 +127,15 @@ float volumetricPathTacing(
     int max_depth,
     int channel)
 {
-    Ray cr(ray);
-    float radiance = (0.0f);
-    float throughput = (1.0f);
-
     if (0)
     {
         vec3 p;
-        return light.Li(cr.o, cr.d, p)[channel];
+        return light.Li(ray.o, ray.d, p)[channel];
     }
+
+    Ray cr(ray);
+    float radiance = (0.0f);
+    float throughput = (1.0f);
 
     for (int depth = 0; depth < max_depth; depth++)
     {
@@ -186,9 +192,8 @@ float volumetricPathTacing(
 
         Frame frame(cr.d);
 
-        // direct lighting
-        // MIS for phase function and light pdf
-        if (1)
+        // MIS direct lighting
+        if (1) // sample light
         {
             vec3 Li;
             float pdfW;
@@ -196,30 +201,28 @@ float volumetricPathTacing(
             light.sample(pos, pdfW, lpos, ldir, Li);
 
             float pdfW_phase = phase->evaluate(frame, ldir);
-            float mis_weight = misWeightBalanceHeuristic(pdfW, pdfW_phase);
+            float mis_weight = 1.0f;// misWeightBalanceHeuristic(pdfW, pdfW_phase);
 
             float transmittance = stochasticTransmittance(pos, lpos, channel);
             float attenuated_radiance = Li[channel] * transmittance;
             radiance += (attenuated_radiance * throughput) *
                 (phase->evaluate(frame, ldir) / pdfW) * mis_weight;
         }
-        if (1)
+        if (0) // sample phase function
         {
             vec3 lpos;
             vec3 ldir = phase->sample(frame, rand01(), rand01());
             vec3 Li = light.Li(pos, ldir, lpos);
             float pdfW = phase->evaluate(frame, ldir);
 
-            float pdfW_light = light.pdf(pos, ldir, lpos, Li);
+            vec3 temp1, temp2;
+            float pdfW_light = light.pdf(pos, ldir, temp1, temp2);
             float mis_weight = misWeightBalanceHeuristic(pdfW, pdfW_light);
 
-            if (Li[channel] > 0.0f) // otherwise lpos is not defined
-            {
-                float transmittance = stochasticTransmittance(pos, lpos, channel);
-                float attenuated_radiance = Li[channel] * transmittance;
-                radiance += (attenuated_radiance * throughput) *
-                    mis_weight; // phase function and pdfW cancelled
-            }
+            float transmittance = stochasticTransmittance(pos, lpos, channel);
+            float attenuated_radiance = Li[channel] * transmittance;
+            radiance += (attenuated_radiance * throughput) *
+                mis_weight; // phase function and pdfW cancelled
         }
 
         // scattered direction
@@ -243,6 +246,8 @@ void render()
     {
         for (int j = 0; j < P::height; j++)
         {
+            printf("\rfinished %.2f%% - %d / %d     ", 100.0f * float(k + 1) / float(P::spp), j, P::height);
+
 #pragma omp parallel for
             for (int i = 0; i < P::width; i++)
             {
@@ -253,7 +258,10 @@ void render()
                     );
             }
         }
-        printf("\rfinished %.2f%%", 100.0f * float(k + 1) / float(P::spp));
+
+        FrameBuffer copy = framebuffer;
+        copy.scaleBrightness(1.0f / (k + 1));
+        copy.dump();
     }
 
     framebuffer.scaleBrightness(1.0f / P::spp);
@@ -274,7 +282,7 @@ int main()
 //     vol->initConstant(1.0f);
 //     vol.load_binary("smoke.vol");
 
-    medium.reset(new HeterogeneousMedium(vol, P::density_scale));
+    medium.reset(new HeterogeneousMedium(vol, P::sigma_s, P::sigma_a));
     phase.reset(new HGPhaseFunction(P::HG_mean_cosine));
 
     printf("init complete\n");

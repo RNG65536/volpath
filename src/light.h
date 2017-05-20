@@ -3,21 +3,24 @@
 
 class Light
 {
-    // sphere light
+    const float distance = 1000.0f;
+
+    // sphere light, mimics sun
     vec3 center = vec3(2, 2, 1);
 //     vec3 center = vec3(-2, -2, -4);
-    float radius = 0.5f;
-    float emission = 10.0f / (radius * radius);
+    float radius = distance * 0.02f;
+    float emission = 0.8f * (distance * distance) / (radius * radius); // sun radiance
     Skydome sky;
 
 public:
     Light() : sky(
-        5.0f,
-        vec3(0.4f),
-        M_PI * 0.1f,
-        M_PI * -0.2f,
-        0.02f)
+        3.0f, // turbidity
+        vec3(0.2f), // ground albedo
+        M_PI * 0.1f, // sun elevation
+        M_PI * (-0.2f + 0.5f), // sun azimuth
+        0.02f) // brightness
     {
+        center = sky.sunDirection() * distance;
     }
     void sample(vec3 position, float& pdfW, vec3& light_pos, vec3& light_dir, vec3& Li) const
     {
@@ -43,7 +46,7 @@ public:
         light_pos = position + direction * M_INFINITY;
         float d2 = dot(position - center, position - center);
         float l2 = d2 - radius * radius;
-        if (l2 < 0) // inside sphere
+        if (l2 <= M_EPS) // inside sphere
         {
             return vec3(0.0f);
         }
@@ -51,6 +54,7 @@ public:
         float cos_a = dot(direction, normalize(center - position));
         if (cos_a < cos_a_max)
         {
+//             return vec3(0.0f);
             return sky.radiance(direction);
         }
         light_pos = position + direction * std::sqrt(l2);

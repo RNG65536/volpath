@@ -14,6 +14,7 @@ class HGPhaseFunction
             float s = 2.0f * rnd0 - 1.0f;
             float f = (1.0f - g * g) / (1.0f + g * s);
             cos_theta = (0.5f / g) * (1.0f + g * g - f * f);
+            cos_theta = f_max(0.0f, f_min(1.0f, cos_theta));
         }
         else
         {
@@ -21,7 +22,8 @@ class HGPhaseFunction
         }
         float sin_theta = std::sqrt(1.0f - cos_theta * cos_theta);
         float phi = 2.0f * M_PI * rnd1;
-        return vec3(std::cos(phi) * sin_theta, std::sin(phi) * sin_theta, cos_theta);
+        vec3 ret = (vec3(std::cos(phi) * sin_theta, std::sin(phi) * sin_theta, cos_theta));
+        return ret;
     }
 
     float evaluate(float cos_theta) const
@@ -60,7 +62,7 @@ class HeterogeneousMedium
     float m_inv_density_max;
 
 public:
-    HeterogeneousMedium(std::unique_ptr<Texture3D>& vol, float scale)
+    HeterogeneousMedium(std::unique_ptr<Texture3D>& vol, const vec3& sigma_s, const vec3& sigma_a)
     {
         m_density = std::move(vol);
         float max_density = m_density->maxValue();
@@ -68,8 +70,8 @@ public:
         m_density_max = max_density;
         m_inv_density_max = 1.0f / m_density_max;
 
-        m_sigma_s = vec3(0.70f, 1.22f, 1.90f) * scale;
-        m_sigma_a = vec3(0.0014f, 0.0025f, 0.0142f) * scale;
+        m_sigma_s = sigma_s;
+        m_sigma_a = sigma_a;
 
         m_sigma_t = m_sigma_s + m_sigma_a;
         m_albedo = m_sigma_s / m_sigma_t;
