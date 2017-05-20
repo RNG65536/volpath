@@ -4,12 +4,13 @@
 class Light
 {
     const float distance = 1000.0f;
+    const float brightness = 0.02f;
 
     // sphere light, mimics sun
     vec3 center = vec3(2, 2, 1);
 //     vec3 center = vec3(-2, -2, -4);
     float radius = distance * 0.02f;
-    float emission = 0.8f * (distance * distance) / (radius * radius); // sun radiance
+    vec3 emission = vec3(1.0f, 0.9f, 0.75f) * (0.8f * (distance * distance) / (radius * radius)); // sun radiance
     Skydome sky;
 
 public:
@@ -41,7 +42,7 @@ public:
         Li = vec3(emission);
         light_pos = position + light_dir * std::sqrt(l2);
     }
-    vec3 Li(const vec3& position, const vec3& direction, vec3& light_pos) const
+    vec3 Li(const vec3& position, const vec3& direction, vec3& light_pos, bool include_sun = true) const
     {
         light_pos = position + direction * M_INFINITY;
         float d2 = dot(position - center, position - center);
@@ -58,6 +59,10 @@ public:
             return sky.radiance(direction);
         }
         light_pos = position + direction * std::sqrt(l2);
+        if (!include_sun) // because Li is used for both passive and aggressive lighting
+        {
+            return vec3(0.0f);
+        }
         return vec3(emission); // todo : add intersection
     }
     float pdf(vec3& position, const vec3& direction, vec3& light_pos, vec3& Li) const

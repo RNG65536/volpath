@@ -27,14 +27,14 @@ class Skydome
     float m_solarAzimuth;
     float m_brightness;
     vec3 m_ground_albedo;
-    ArHosekSkyModelState *skymodel_state[3];
+    std::unique_ptr<ArHosekSkyModelState> skymodel_state[3];
 
 public:
     Skydome(float turbidity, const vec3& ground_albedo, float solar_elevation, float solar_azimuth, float brightness)
     {
         for (int i = 0; i < 3; i++)
         {
-            skymodel_state[i] = arhosek_rgb_skymodelstate_alloc_init(turbidity, ground_albedo[i], solar_elevation);
+            skymodel_state[i].reset(arhosek_rgb_skymodelstate_alloc_init(turbidity, ground_albedo[i], solar_elevation));
         }
         m_solarElevation = f_max(0.0f, f_min(M_PI_2, solar_elevation));
         m_solarAzimuth = solar_azimuth;
@@ -43,13 +43,6 @@ public:
     }
     ~Skydome()
     {
-        for (int i = 0; i < 3; i++)
-        {
-            if (skymodel_state[i])
-            {
-                arhosekskymodelstate_free(skymodel_state[i]);
-            }
-        }
     }
 
     vec3 sunDirection() const
@@ -71,7 +64,7 @@ public:
         {
             for (int i = 0; i < 3; i++)
             {
-                rad[i] = (float)arhosek_tristim_skymodel_radiance(skymodel_state[i], theta, gamma, i) * m_brightness;
+                rad[i] = (float)arhosek_tristim_skymodel_radiance(skymodel_state[i].get(), theta, gamma, i) * m_brightness;
             }
         }
         else
@@ -85,7 +78,7 @@ public:
 //             float gamma = acos(dot(viewdir, sundir));
 //             for (int i = 0; i < 3; i++)
 //             {
-//                 rad[i] = (float)arhosek_tristim_skymodel_radiance(skymodel_state[i], M_PI - theta, gamma, i);
+//                 rad[i] = (float)arhosek_tristim_skymodel_radiance(skymodel_state[i].get(), M_PI - theta, gamma, i);
 //             }
 //             rad *= m_ground_albedo;
         }
