@@ -104,7 +104,7 @@ public:
     float sampleFreeDistance(float rnd, int channel) const
     {
 //         return -std::log(1.0f - rnd) * m_inv_sigma_t_max[channel];
-        return -std::log(f_max(rnd, FLT_MIN)) * m_inv_sigma_t_max[channel];
+        return -std::log(rnd + FLT_MIN) * m_inv_sigma_t_max[channel]; // log(0) -> -INF
     }
 
     bool intersect(const Ray& r, float& t_near, float& t_far) const

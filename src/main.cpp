@@ -58,14 +58,14 @@ void P::param()
     camera_lookat = vec3(0.0f, 0.2f, 0.0f);
     fov = 30.0f;
 
-    width = 100;
-    height = 100;
-    spp = 100;
+    width = 600;
+    height = 600;
+    spp = 200;
     max_depth = 20000;
 
     // sigma_t_prime = sigma_a + sigma_s * (1 - g)
     // for scattering dominated media, should scale with 1 / (1 - g) to approximate appearance
-    density_scale = 1000.0f; // 800.0f; //  20.0f;
+    density_scale = 500.0f; // 1000.0f; // 800.0f; //  20.0f;
     HG_mean_cosine = 0.877f;// 0.7f;// 
 
 //     sigma_s = vec3(0.70f, 1.22f, 1.90f) * density_scale;
@@ -97,7 +97,7 @@ float stochasticTransmittance(
 
     float max_t = f_min(t_far, distance(start_point, end_point));
 
-    int nsamp = 2;
+    int nsamp = 2; // limited improvement
     float count = 0; // the samples that reached the destination
 
     for (int n = 0; n < nsamp; n++)
