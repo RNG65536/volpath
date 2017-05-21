@@ -147,3 +147,8 @@ vec3::vec3() : x(0), y(0), z(0)
 {
 
 }
+
+bool vec3::operator!=(const vec3& b)
+{
+    return x != b.x || y != b.y || z != b.z;
+}

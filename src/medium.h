@@ -56,10 +56,13 @@ class HeterogeneousMedium
     std::unique_ptr<Texture3D> m_density;
     vec3 m_sigma_s, m_sigma_a, m_sigma_t;
     vec3 m_albedo;
-    vec3 m_sigma_t_max; // sigma is directly modulated by density
-    vec3 m_inv_sigma_t_max; // sigma is directly modulated by density
-    float m_density_max;
-    float m_inv_density_max;
+
+    float m_max_density;
+    float m_inv_max_density;
+    vec3 m_max_sigma_t; // sigma is directly modulated by density
+    vec3 m_inv_max_sigma_t; // sigma is directly modulated by density
+    float m_max_sigma_t_max_compoennt; // usually as majorant
+    float m_inv_max_sigma_t_max_component;
 
 public:
     HeterogeneousMedium(std::unique_ptr<Texture3D>& vol, const vec3& sigma_s, const vec3& sigma_a)
@@ -67,45 +70,106 @@ public:
         m_density = std::move(vol);
         float max_density = m_density->maxValue();
         printf("maximum density is %f\n", max_density);
-        m_density_max = max_density;
-        m_inv_density_max = 1.0f / m_density_max;
+        m_max_density = max_density;
+        m_inv_max_density = 1.0f / m_max_density;
 
         m_sigma_s = sigma_s;
         m_sigma_a = sigma_a;
 
         m_sigma_t = m_sigma_s + m_sigma_a;
         m_albedo = m_sigma_s / m_sigma_t;
-        m_sigma_t_max = m_sigma_t * max_density;
-        m_inv_sigma_t_max = vec3(1.0f) / m_sigma_t_max;
+        m_max_sigma_t = m_sigma_t * max_density;
+        m_inv_max_sigma_t = vec3(1.0f) / m_max_sigma_t;
+
+        m_max_sigma_t_max_compoennt =
+            f_max(f_max(m_max_sigma_t.x, m_max_sigma_t.y), m_max_sigma_t.z);
+        m_inv_max_sigma_t_max_component = 1.0f / m_max_sigma_t_max_compoennt;
+    }
+
+    vec3 sigmaT(const vec3& pos) const
+    {
+        return m_sigma_t * m_density->fetch(pos);
     }
     float sigmaT(const vec3& pos, int channel) const
     {
         return m_sigma_t[channel] * m_density->fetch(pos);
     }
+
+    vec3 sigmaS(const vec3& pos) const
+    {
+        return m_sigma_s * m_density->fetch(pos);
+    }
     float sigmaS(const vec3& pos, int channel) const
     {
         return m_sigma_s[channel] * m_density->fetch(pos);
+    }
+
+    vec3 sigmaA(const vec3& pos) const
+    {
+        return m_sigma_a * m_density->fetch(pos);
     }
     float sigmaA(const vec3& pos, int channel) const
     {
         return m_sigma_a[channel] * m_density->fetch(pos);
     }
-    float albedo(int channel)
+
+    vec3 albedo() const
+    {
+        return m_albedo;
+    }
+    float albedo(int channel) const
     {
         return m_albedo[channel];
     }
 
-    // continue only if null collision
-    bool isNotNullCollision(const vec3& pos, float rnd) const
+    float density(const vec3& pos) const
     {
-        // sigma_t / sigma_t_max
-        return rnd < m_density->fetch(pos) * m_inv_density_max;
+        return m_density->fetch(pos);
     }
-    float sampleFreeDistance(float rnd, int channel) const
+
+    //////////////////////////////////////////////////////////////////////////
+
+    float maxDensity() const
     {
-//         return -std::log(1.0f - rnd) * m_inv_sigma_t_max[channel];
-        return -std::log(rnd + FLT_MIN) * m_inv_sigma_t_max[channel]; // log(0) -> -INF
+        return m_max_density;
     }
+    float invMaxDensity() const
+    {
+        return m_inv_max_density;
+    }
+    float maxSigmaT(int channel) const
+    {
+        return m_max_sigma_t[channel];
+    }
+    float invMaxSigmaT(int channel) const
+    {
+        return m_inv_max_sigma_t[channel];
+    }
+    float maxSigmaTMaxComponent() const
+    {
+        return m_max_sigma_t_max_compoennt;
+    }
+    float invMaxSigmaTMaxComponent() const
+    {
+        return m_inv_max_sigma_t_max_component;
+    }
+
+    float sampleFreePath(float rnd, float inv_sigma) const
+    {
+        return -std::log(rnd + FLT_MIN) * inv_sigma; // log(0) -> -INF
+    }
+    //////////////////////////////////////////////////////////////////////////
+//     // continue only if null collision
+//     bool isNotNullCollision(const vec3& pos, float rnd) const
+//     {
+//         // sigma_t / sigma_t_max
+//         return rnd < m_density->fetch(pos) * m_inv_max_density;
+//     }
+//     float sampleFreeDistance(float rnd, int channel) const
+//     {
+// //         return -std::log(1.0f - rnd) * m_inv_sigma_t_max[channel];
+//         return -std::log(rnd + FLT_MIN) * m_inv_max_sigma_t[channel]; // log(0) -> -INF
+//     }
 
     bool intersect(const Ray& r, float& t_near, float& t_far) const
     {

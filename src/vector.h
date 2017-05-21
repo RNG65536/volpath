@@ -35,6 +35,7 @@ public:
     vec3& operator-= (float b);
     vec3& operator*= (float b);
     vec3& operator/= (float b);
+    bool operator!=(const vec3& b);
 };
 
 vec3 normalize(const vec3& a);
