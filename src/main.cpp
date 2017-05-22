@@ -61,7 +61,7 @@ void P::param()
     width = 200;
     height = 200;
     spp = 200;
-    max_depth = 200; //  20000; // 
+    max_depth = 1000;// 200; //  20000; // 
 
     // sigma_t_prime = sigma_a + sigma_s * (1 - g)
     // for scattering dominated media, should scale with 1 / (1 - g) to approximate appearance
@@ -71,10 +71,13 @@ void P::param()
 //     sigma_s = vec3(0.70f, 1.22f, 1.90f) * density_scale;
 //     sigma_a = vec3(0.0014f, 0.0025f, 0.0142f) * density_scale;
 //     sigma_a = vec3(0.0001f, 0.0001f, 0.0001f) * density_scale;
+
 //     sigma_s = vec3(1.0f, 1.0f, 1.0f) * density_scale;
 //     sigma_a = vec3(0.0f, 0.0f, 0.0f) * density_scale;
+
 //     sigma_a = vec3(0.2f, 0.2f, 0.2f) * density_scale;
 //     sigma_s = vec3(0.8f, 0.8f, 0.8f) * density_scale;
+
     sigma_a = vec3(0.1f, 0.3f, 0.5f) * density_scale;
     sigma_s = vec3(0.9f, 0.8f, 0.8f) * density_scale;
 }

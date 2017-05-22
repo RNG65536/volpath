@@ -1,7 +1,7 @@
 class Volpath : public VolumetricPathTracer
 {
 public:
-    float deltaTrackingEstimatorChannel(
+    float deltaTrackingTransmittanceEstimatorChannel(
         const vec3& start_point,
         const vec3& end_point,
         int channel)
@@ -28,9 +28,7 @@ public:
             }
             vec3 pos = shadow_ray.at(dist);
 
-            if (rand01() <
-                ( medium->sigmaT(pos)[channel] / medium->maxSigmaT(channel) )
-                )
+            if (rand01() < medium->sigmaT(pos)[channel] * inv_sigma)
             {
                 break;
             }
@@ -38,11 +36,48 @@ public:
         return float(dist >= max_t);
     }
 
-    float deltaTrackingEstimatorCompensationChannel(
+//     vec3 ratioTrackingTransmittanceEstimator(
+//         const vec3& start_point,
+//         const vec3& end_point,
+//         int channel)
+//     {
+//         Ray shadow_ray(start_point, normalize(end_point - start_point));
+// 
+//         float t_near, t_far;
+//         bool shade_vol = medium->intersect(shadow_ray, t_near, t_far);
+//         if (!shade_vol)
+//         {
+//             return 1.0f;
+//         }
+// 
+//         float inv_sigma = 1.0f / medium->maxSigmaT(channel);
+//         float max_t = f_min(t_far, distance(start_point, end_point));
+//         
+// 
+//         float dist = t_near;
+//         for (;;)
+//         {
+//             dist += medium->sampleFreePath(rand01(), inv_sigma);
+//             if (dist >= max_t)
+//             {
+//                 break;
+//             }
+//             vec3 pos = shadow_ray.at(dist);
+// 
+//             if (rand01() <
+//                 (medium->sigmaT(pos)[channel] / medium->maxSigmaT(channel))
+//                 )
+//             {
+//                 break;
+//             }
+//         }
+//         return float(dist >= max_t);
+//     }
+
+    vec3 ratioTrackingCompensationEstimatorChannel(
         const vec3& start_point,
         const vec3& end_point,
-        int sampling_channel,
-        int channel)
+        int sampling_channel)
     {
         Ray shadow_ray(start_point, normalize(end_point - start_point));
 
@@ -50,12 +85,12 @@ public:
         bool shade_vol = medium->intersect(shadow_ray, t_near, t_far);
         if (!shade_vol)
         {
-            return 1.0f;
+            return vec3(1.0f);
         }
 
         float inv_sigma = 1.0f / medium->maxSigmaT(sampling_channel);
         float max_t = f_min(t_far, distance(start_point, end_point));
-        float Tr = 1.0f;
+        vec3 Tr = vec3(1.0f);
 
         float dist = t_near;
         for (;;)
@@ -67,13 +102,8 @@ public:
             }
             vec3 pos = shadow_ray.at(dist);
 
-            Tr *= 1.0f - (medium->sigmaT(pos)[channel] - medium->sigmaT(pos)[sampling_channel]) / (medium->maxSigmaT(channel));
-//             if (rand01() < (medium->sigmaT(pos)[channel] - medium->sigmaT(pos)[sampling_channel]) / (medium->maxSigmaT(channel)))
-//             {
-//                 break;
-//             }
+            Tr *= vec3(1.0f) - (medium->sigmaT(pos) - vec3(medium->sigmaT(pos)[sampling_channel])) * inv_sigma;
         }
-//         return float(dist >= max_t);
         return Tr;
     }
 
@@ -113,9 +143,9 @@ public:
             /// woodcock tracking / delta tracking
             vec3 pos = cr.at(t_near); // current position
             float dist = t_near;
-            int sampling_channel = std::min(int(rand01() * 3.0f), 2);
+            int sampling_channel = std::min(int(rand01() * 3.0f), 2); 2; // // 1; // 0;// 
             float sigma = medium->maxSigmaT(sampling_channel);
-            float inv_sigma = 1.0 / sigma;
+            float inv_sigma = 1.0f / sigma;
             float sample_dist;
 
             // sampling exponentially
@@ -130,7 +160,7 @@ public:
                     break;
                 }
                 pos = cr.at(dist);
-                if (rand01() < medium->density(pos) * medium->invMaxDensity())
+                if (rand01() < medium->sigmaT(pos)[sampling_channel] * inv_sigma)
                 {
                     break;
                 }
@@ -139,6 +169,10 @@ public:
             // probability is exp(-optical_thickness)
             if (through)
             {
+                // passthrough compensation
+                vec3 Tr = ratioTrackingCompensationEstimatorChannel(cr.at(t_near), cr.at(t_far), sampling_channel);
+                throughput *= Tr;
+
                 if (depth > 0 || P::show_bg) // if direct lighting does not consider the background, seems lowest variance
                 {
                     vec3 lpos;
@@ -149,13 +183,9 @@ public:
                 break;
             }
 
-            vec3 Tr;
-            for (int channel = 0; channel < 3; channel++)
-            {
-                Tr[channel] = deltaTrackingEstimatorCompensationChannel(cr.at(t_near), pos, sampling_channel, channel);
-            }
+            // non-passthrough compensation
+            vec3 Tr = ratioTrackingCompensationEstimatorChannel(cr.at(t_near), pos, sampling_channel);
             throughput *= Tr * (medium->sigmaT(pos) / medium->sigmaT(pos)[sampling_channel]);
-
 
             // incoming radiance is scattered by sigma_s, and the line sampling pdf by delta tracking
             // is sigma_t * exp(-optical_thickness), medium attenuation is exp(-optical_thickness),
@@ -164,7 +194,7 @@ public:
 
             Frame frame(cr.d);
 
-            // MIS direct lighting
+            // direct lighting
             if (1) // sample light
             {
                 vec3 Li;
@@ -175,7 +205,7 @@ public:
 
                 for (int channel = 0; channel < 3; channel++)
                 {
-                    float transmittance = deltaTrackingEstimatorChannel(pos, lpos, channel);
+                    float transmittance = deltaTrackingTransmittanceEstimatorChannel(pos, lpos, channel);
                     attenuated_radiance[channel] = Li[channel] * transmittance;
                 }
                 radiance += (attenuated_radiance * throughput)
