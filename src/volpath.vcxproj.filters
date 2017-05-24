@@ -36,6 +36,9 @@
     <ClCompile Include="hosek\ArHosekSkyModel.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="volume.h">
@@ -88,6 +91,18 @@
     </ClInclude>
     <ClInclude Include="hosek\ArHosekSkyModelData_CIEXYZ.h">
       <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="volpath_multichannel.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="volpath.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="volpath_cloud.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -76,6 +76,7 @@
     <ClCompile Include="hosek\ArHosekSkyModel.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="texture3d.cpp" />
+    <ClCompile Include="timer.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="vector.cpp" />
     <ClCompile Include="volume.cpp" />
@@ -95,8 +96,12 @@
     <ClInclude Include="scene.h" />
     <ClInclude Include="skydome.h" />
     <ClInclude Include="texture3d.h" />
+    <ClInclude Include="timer.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="vector.h" />
+    <ClInclude Include="volpath.h" />
+    <ClInclude Include="volpath_cloud.h" />
+    <ClInclude Include="volpath_multichannel.h" />
     <ClInclude Include="volume.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

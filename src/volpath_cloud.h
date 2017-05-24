@@ -50,7 +50,7 @@ public:
 
         Ray cr(ray);
         vec3 radiance = vec3(0.0f);
-        vec3 throughput = vec3(1.0f);
+        float throughput = 1.0f;
 
         int depth;
         for (depth = 0; depth < max_depth; depth++)
@@ -84,7 +84,7 @@ public:
             vec3 pos = cr.at(t_near); // current position
             float dist = t_near;
             int sampling_channel = 0;
-            float inv_sigma = 1.0f / medium->maxSigmaT(sampling_channel);
+            float inv_sigma = medium->invMaxSigmaT(sampling_channel);
 
             bool through = false;
             // delta tracking scattering event sampling
@@ -119,7 +119,7 @@ public:
             // incoming radiance is scattered by sigma_s, and the line sampling pdf by delta tracking
             // is sigma_t * exp(-optical_thickness), medium attenuation is exp(-optical_thickness),
             // by cancelling only the albedo (= sigma_s / sigma_t) remains
-            throughput *= medium->albedo();
+            throughput *= medium->albedo()[sampling_channel];
 
             Frame frame(cr.d);
 
