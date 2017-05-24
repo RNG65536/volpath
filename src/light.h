@@ -11,12 +11,13 @@ class Light
 //     vec3 center = vec3(-2, -2, -4);
     float radius = distance * 0.02f;
     vec3 emission = vec3(1.0f, 0.9f, 0.75f) * (0.8f * (distance * distance) / (radius * radius)); // sun radiance
+//     vec3 emission = vec3(0.0f);
     Skydome sky;
 
 public:
     Light() : sky(
-        3.0f, // turbidity
-        vec3(0.2f), // ground albedo
+        4.0f, // 3.0f, // 5.0f, // turbidity
+        vec3(0.157f), // vec3(0.2f), // ground albedo
         M_PI * 0.1f, // sun elevation
         M_PI * (-0.2f + 0.5f), // sun azimuth
         0.02f) // brightness

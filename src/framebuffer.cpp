@@ -106,6 +106,9 @@ static void save_hdr_image(const float *fb, int width, int height)
                 for (int i = 0; i < width; i++)
                 {
                     int offset = (i + j * width) * 3;
+//                     bufByte[n++] = (unsigned char)(std::pow(clamp(fb[offset + 0]), 1.0f / 2.2f) * 255);
+//                     bufByte[n++] = (unsigned char)(std::pow(clamp(fb[offset + 1]), 1.0f / 2.2f) * 255);
+//                     bufByte[n++] = (unsigned char)(std::pow(clamp(fb[offset + 2]), 1.0f / 2.2f) * 255);
                     bufByte[n++] = (unsigned char)(clamp(fb[offset + 0]) * 255);
                     bufByte[n++] = (unsigned char)(clamp(fb[offset + 1]) * 255);
                     bufByte[n++] = (unsigned char)(clamp(fb[offset + 2]) * 255);

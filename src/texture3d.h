@@ -78,6 +78,22 @@ public:
             }
         }
     }
+    void initCheckerSmooth()
+    {
+        for (int i = 0; i < N; i++)
+        {
+            for (int j = 0; j < N; j++)
+            {
+                for (int k = 0; k < N; k++)
+                {
+                    float xi = std::sin(1.0 * (i + 1) / N * M_PI);
+                    float yi = std::sin(1.0 * (j + 1) / N * M_PI);
+                    float zi = std::sin(1.0 * (k + 1) / N * M_PI);
+                    data[index(i, j, k)] = f_max(0.0f, xi * yi * zi);
+                }
+            }
+        }
+    }
     void initConstant(float f)
     {
         for (int i = 0; i < N; i++)
@@ -154,6 +170,7 @@ public:
 
     float fetch(const vec3& pos) const
     {
+        return 1.0f;
         if (isOutside(pos))
         {
             return 0;

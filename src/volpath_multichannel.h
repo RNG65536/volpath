@@ -1,6 +1,5 @@
 class VolpathMultichannel : public VolumetricPathTracer
 {
-public:
     // stochastic transmittance
     float deltaTrackingEstimatorChannel(
         const vec3& start_point,
@@ -192,6 +191,7 @@ public:
         return radiance;
     }
 
+public:
     vec3 trace(const Ray& ray, int max_depth, Stats& stats)
     {
         float rad[3];

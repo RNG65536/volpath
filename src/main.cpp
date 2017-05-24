@@ -15,6 +15,7 @@
 using std::cout;
 using std::endl;
 
+#include "timer.h"
 #include "constants.h"
 #include "vector.h"
 #include "utils.h"
@@ -60,26 +61,27 @@ void P::param()
 
     width = 200;
     height = 200;
-    spp = 200;
-    max_depth = 1000;// 200; //  20000; // 
+    spp = 1000;
+    max_depth = 20000; // 1000; // 200; // 
 
     // sigma_t_prime = sigma_a + sigma_s * (1 - g)
     // for scattering dominated media, should scale with 1 / (1 - g) to approximate appearance
-    density_scale = 20.0f; // 500.0f; // 
-    HG_mean_cosine = 0.0f; //  0.877f;// 0.7f;// 
+    density_scale = 500.0f; // 100.0f; //  40.0f;// 20.0f; // 5.0f; //  
+    HG_mean_cosine = 0.877f;// 0.0f; //  0.7f;// 0.99f;// 
 
 //     sigma_s = vec3(0.70f, 1.22f, 1.90f) * density_scale;
 //     sigma_a = vec3(0.0014f, 0.0025f, 0.0142f) * density_scale;
 //     sigma_a = vec3(0.0001f, 0.0001f, 0.0001f) * density_scale;
 
-//     sigma_s = vec3(1.0f, 1.0f, 1.0f) * density_scale;
-//     sigma_a = vec3(0.0f, 0.0f, 0.0f) * density_scale;
+    sigma_s = vec3(1.0f, 1.0f, 1.0f) * density_scale;
+    sigma_a = vec3(0.0f, 0.0f, 0.0f) * density_scale;
 
 //     sigma_a = vec3(0.2f, 0.2f, 0.2f) * density_scale;
 //     sigma_s = vec3(0.8f, 0.8f, 0.8f) * density_scale;
 
-    sigma_a = vec3(0.1f, 0.3f, 0.5f) * density_scale;
-    sigma_s = vec3(0.9f, 0.8f, 0.8f) * density_scale;
+    // for compensation comparison
+//     sigma_a = vec3(0.1f, 0.3f, 0.5f) * density_scale;
+//     sigma_s = vec3(0.9f, 0.8f, 0.8f) * density_scale;
 }
 
 Light light;
@@ -120,6 +122,7 @@ public:
     void render()
     {
         FrameBuffer framebuffer(P::width, P::height);
+        Timer timer;
 
         for (int k = 0; k < P::spp; k++)
         {
@@ -129,7 +132,7 @@ public:
             {
                 printf("\rfinished %.2f%% - %d / %d     ", 100.0f * float(k + 1) / float(P::spp), j, P::height);
 
-#pragma omp parallel for
+// #pragma omp parallel for
                 for (int i = 0; i < P::width; i++)
                 {
                     vec3 rad = trace(cam->pixelRay(i, j), P::max_depth, m_stats);
@@ -138,6 +141,7 @@ public:
             }
 
             m_stats.print();
+            cout << " elapsed " << timer.elapsed() << " s, ";
 
             FrameBuffer copy = framebuffer;
             copy.scaleBrightness(1.0f / (k + 1));
@@ -153,11 +157,13 @@ public:
 
 #include "volpath_multichannel.h"
 #include "volpath.h"
+#include "volpath_cloud.h"
 
 int main()
 {
 //     VolpathMultichannel volpath;
-    Volpath volpath;
+//     Volpath volpath;
+    VolpathCloud volpath;
 
     P::param();
     cam.reset(new Camera(P::camera_origin, P::camera_lookat, P::fov, P::width, P::height));
@@ -166,6 +172,7 @@ int main()
 
     vol.reset(new Texture3D(128, 1, vec3(-0.5)));
     vol->initChecker();
+//     vol->initCheckerSmooth();
 //     vol->initConstant(1.0f);
 //     vol.load_binary("smoke.vol");
 
