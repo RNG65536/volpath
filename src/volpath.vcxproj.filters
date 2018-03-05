@@ -41,43 +41,43 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="volume.h">
+    <ClInclude Include="volume.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="vector.h">
+    <ClInclude Include="vector.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="constants.h">
+    <ClInclude Include="constants.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="utils.h">
+    <ClInclude Include="utils.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="framebuffer.h">
+    <ClInclude Include="framebuffer.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="light.h">
+    <ClInclude Include="light.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="texture3d.h">
+    <ClInclude Include="texture3d.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="ray.h">
+    <ClInclude Include="ray.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="scene.h">
+    <ClInclude Include="scene.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="camera.h">
+    <ClInclude Include="camera.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="fractal.h">
+    <ClInclude Include="fractal.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="medium.h">
+    <ClInclude Include="medium.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="skydome.h">
+    <ClInclude Include="skydome.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="hosek\ArHosekSkyModelData_RGB.h">
@@ -92,16 +92,16 @@
     <ClInclude Include="hosek\ArHosekSkyModelData_CIEXYZ.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="volpath_multichannel.h">
+    <ClInclude Include="volpath_multichannel.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="volpath.h">
+    <ClInclude Include="volpath.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="volpath_cloud.h">
+    <ClInclude Include="volpath_cloud.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="timer.h">
+    <ClInclude Include="timer.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,7 +1,7 @@
 #include <random>
 #include <sstream>
-#include "vector.h"
-#include "utils.h"
+#include "vector.hpp"
+#include "utils.hpp"
 
 static std::default_random_engine rng;
 static std::uniform_real_distribution<float> dist01(0.0f, 1.0f);

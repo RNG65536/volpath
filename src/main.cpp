@@ -15,19 +15,19 @@
 using std::cout;
 using std::endl;
 
-#include "timer.h"
-#include "constants.h"
-#include "vector.h"
-#include "utils.h"
-#include "framebuffer.h"
-#include "skydome.h"
-#include "light.h"
-#include "ray.h"
-#include "texture3d.h"
-#include "scene.h"
-#include "camera.h"
-#include "fractal.h"
-#include "medium.h"
+#include "timer.hpp"
+#include "constants.hpp"
+#include "vector.hpp"
+#include "utils.hpp"
+#include "framebuffer.hpp"
+#include "skydome.hpp"
+#include "light.hpp"
+#include "ray.hpp"
+#include "texture3d.hpp"
+#include "scene.hpp"
+#include "camera.hpp"
+#include "fractal.hpp"
+#include "medium.hpp"
 
 namespace P
 {
@@ -155,9 +155,9 @@ public:
     }
 };
 
-#include "volpath_multichannel.h"
-#include "volpath.h"
-#include "volpath_cloud.h"
+#include "volpath_multichannel.hpp"
+#include "volpath.hpp"
+#include "volpath_cloud.hpp"
 
 int main()
 {

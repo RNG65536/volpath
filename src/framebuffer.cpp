@@ -3,9 +3,9 @@
 #include <algorithm>
 #include <fstream>
 #include <cstdint>
-#include "vector.h"
-#include "framebuffer.h"
-#include "utils.h"
+#include "vector.hpp"
+#include "framebuffer.hpp"
+#include "utils.hpp"
 
 using std::cout;
 using std::endl;

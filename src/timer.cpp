@@ -1,5 +1,5 @@
 #include <Windows.h>
-#include "timer.h"
+#include "timer.hpp"
 
 class TimeData
 {
