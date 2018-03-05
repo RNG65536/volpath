@@ -1,6 +1,10 @@
 #ifndef light_h__
 #define light_h__
 
+// TODO : fix light_pos :
+// l = d * cos_theta_sample - sqrt(sq(r) - sq(d * sin_theta_sample))
+// light_pos = position + light_dir * l
+
 class Light
 {
     const float distance = 1000.0f;
