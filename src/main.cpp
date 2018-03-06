@@ -132,7 +132,7 @@ public:
             {
                 printf("\rfinished %.2f%% - %d / %d     ", 100.0f * float(k + 1) / float(P::spp), j, P::height);
 
-// #pragma omp parallel for
+#pragma omp parallel for
                 for (int i = 0; i < P::width; i++)
                 {
                     vec3 rad = trace(cam->pixelRay(i, j), P::max_depth, m_stats);

@@ -80,18 +80,6 @@
     <ClInclude Include="skydome.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="hosek\ArHosekSkyModelData_RGB.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="hosek\ArHosekSkyModelData_Spectral.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="hosek\ArHosekSkyModel.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="hosek\ArHosekSkyModelData_CIEXYZ.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
     <ClInclude Include="volpath_multichannel.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -103,6 +91,18 @@
     </ClInclude>
     <ClInclude Include="timer.hpp">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hosek\ArHosekSkyModel.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hosek\ArHosekSkyModelData_CIEXYZ.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hosek\ArHosekSkyModelData_RGB.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hosek\ArHosekSkyModelData_Spectral.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -327,16 +327,16 @@ public:
             vec3 Tr = vec3(1.0f);
             {
                 float max_t = f_min(t_far, distance(cr.o, pos));
-                float dist = t_near;
+                float _dist = t_near;
                 for (;;)
                 {
-                    dist += medium->sampleFreePath(rand01(), inv_sigma);
-                    if (dist >= max_t)
+                    _dist += medium->sampleFreePath(rand01(), inv_sigma);
+                    if (_dist >= max_t)
                     {
                         break;
                     }
-                    vec3 pos = cr.at(dist);
-                    Tr *= vec3(1.0f) - (medium->sigmaT(pos) - vec3(medium->sigmaT(pos)[sampling_channel])) * inv_sigma;
+                    vec3 _pos = cr.at(_dist);
+                    Tr *= vec3(1.0f) - (medium->sigmaT(_pos) - vec3(medium->sigmaT(_pos)[sampling_channel])) * inv_sigma;
                 }
             }
 
