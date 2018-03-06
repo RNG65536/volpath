@@ -73,37 +73,37 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="framebuffer.cpp" />
+    <ClCompile Include="framebuffer.cc" />
     <ClCompile Include="hosek\ArHosekSkyModel.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="texture3d.cpp" />
-    <ClCompile Include="timer.cpp" />
-    <ClCompile Include="utils.cpp" />
-    <ClCompile Include="vector.cpp" />
-    <ClCompile Include="volume.cpp" />
+    <ClCompile Include="main.cc" />
+    <ClCompile Include="texture3d.cc" />
+    <ClCompile Include="timer.cc" />
+    <ClCompile Include="utils.cc" />
+    <ClCompile Include="vector.cc" />
+    <ClCompile Include="volume.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="camera.hpp" />
-    <ClInclude Include="constants.hpp" />
-    <ClInclude Include="fractal.hpp" />
-    <ClInclude Include="framebuffer.hpp" />
-    <ClInclude Include="hosek\ArHosekSkyModel.hpp" />
-    <ClInclude Include="hosek\ArHosekSkyModelData_CIEXYZ.hpp" />
-    <ClInclude Include="hosek\ArHosekSkyModelData_RGB.hpp" />
-    <ClInclude Include="hosek\ArHosekSkyModelData_Spectral.hpp" />
-    <ClInclude Include="light.hpp" />
-    <ClInclude Include="medium.hpp" />
-    <ClInclude Include="ray.hpp" />
-    <ClInclude Include="scene.hpp" />
-    <ClInclude Include="skydome.hpp" />
-    <ClInclude Include="texture3d.hpp" />
-    <ClInclude Include="timer.hpp" />
-    <ClInclude Include="utils.hpp" />
-    <ClInclude Include="vector.hpp" />
-    <ClInclude Include="volpath.hpp" />
-    <ClInclude Include="volpath_cloud.hpp" />
-    <ClInclude Include="volpath_multichannel.hpp" />
-    <ClInclude Include="volume.hpp" />
+    <ClInclude Include="camera.hh" />
+    <ClInclude Include="constants.hh" />
+    <ClInclude Include="fractal.hh" />
+    <ClInclude Include="framebuffer.hh" />
+    <ClInclude Include="hosek\ArHosekSkyModel.h" />
+    <ClInclude Include="hosek\ArHosekSkyModelData_CIEXYZ.h" />
+    <ClInclude Include="hosek\ArHosekSkyModelData_RGB.h" />
+    <ClInclude Include="hosek\ArHosekSkyModelData_Spectral.h" />
+    <ClInclude Include="light.hh" />
+    <ClInclude Include="medium.hh" />
+    <ClInclude Include="ray.hh" />
+    <ClInclude Include="scene.hh" />
+    <ClInclude Include="skydome.hh" />
+    <ClInclude Include="texture3d.hh" />
+    <ClInclude Include="timer.hh" />
+    <ClInclude Include="utils.hh" />
+    <ClInclude Include="vector.hh" />
+    <ClInclude Include="volpath.hh" />
+    <ClInclude Include="volpath_cloud.hh" />
+    <ClInclude Include="volpath_multichannel.hh" />
+    <ClInclude Include="volume.hh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

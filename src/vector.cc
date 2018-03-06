@@ -1,5 +1,5 @@
 #include <cmath>
-#include "vector.hpp"
+#include "vector.hh"
 
 vec3 normalize(const vec3& a)
 {
