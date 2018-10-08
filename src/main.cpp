@@ -130,7 +130,7 @@ public:
 
             for (int j = 0; j < P::height; j++)
             {
-                printf("\rfinished %.2f%% - %d / %d     ", 100.0f * float(k + 1) / float(P::spp), j, P::height);
+                printf("\rfinished %d / %d - %.2f%%      ", k + 1, P::spp, 100.0f * float(j + 1) / float(P::height));
 
 #pragma omp parallel for
                 for (int i = 0; i < P::width; i++)

@@ -1,1 +1,1 @@
-![](https://raw.githubusercontent.com/RNG65536/volpath/master/1.jpg)
+![](result/1.jpg)

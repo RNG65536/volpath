@@ -33,11 +33,12 @@ public:
         Frame frame(center - position);
 
         float d2 = dot(position - center, position - center);
-        float l2 = d2 - radius * radius;
+        float r2 = radius * radius;
+        float l2 = d2 - r2;
         float cos_a_max = std::sqrt(l2 / d2);
 
         float rnd0 = rand01(), rnd1 = rand01();
-        float cos_a = 1 - rnd0 + rnd0 * cos_a_max;
+        float cos_a = 1 - rnd0 + rnd0 * cos_a_max; // uniformly sample the cosine
         float sin_a = std::sqrt(1 - cos_a * cos_a);
         float phi = 2 * M_PI * rnd1;
         light_dir = frame.toWorld(vec3(std::cos(phi) * sin_a, std::sin(phi) * sin_a, cos_a));
@@ -45,7 +46,9 @@ public:
 
         pdfW = 1.0f / (2.0f * M_PI * (1.0f - cos_a_max));
         Li = vec3(emission);
-        light_pos = position + light_dir * std::sqrt(l2);
+        float d = std::sqrt(d2);
+        float dist_to_hit = d * cos_a - std::sqrt(r2 - sq(d * sin_a));
+        light_pos = position + light_dir * dist_to_hit;
     }
     vec3 Li(const vec3& position, const vec3& direction, vec3& light_pos, bool include_sun = true) const
     {
