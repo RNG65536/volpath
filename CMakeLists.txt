@@ -7,12 +7,15 @@ if (OPENMP_FOUND)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 
+set(sky_model_srcs
+  "src/hosek/ArHosekSkyModel.cpp"
+  "src/hosek/ArHosekSkyModel.h"
+  "src/hosek/ArHosekSkyModelData_CIEXYZ.h"
+  "src/hosek/ArHosekSkyModelData_RGB.h"
+  "src/hosek/ArHosekSkyModelData_Spectral.h"
+)
+
 set(srcs
-    "src/hosek/ArHosekSkyModel.cpp"
-    "src/hosek/ArHosekSkyModel.h"
-    "src/hosek/ArHosekSkyModelData_CIEXYZ.h"
-    "src/hosek/ArHosekSkyModelData_RGB.h"
-    "src/hosek/ArHosekSkyModelData_Spectral.h"
     "src/camera.h"
     "src/constants.h"
     "src/fractal.h"
@@ -39,4 +42,7 @@ set(srcs
     "src/volume.cpp"
 )
 
+add_library(sky_model STATIC ${sky_model_srcs})
 add_executable(volpath ${srcs})
+
+target_link_libraries(volpath sky_model)
